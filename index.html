@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:#081249;color:#F5F4EF;overflow-x:hidden}
+  a{text-decoration:none;color:inherit}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;background:rgba(8,18,73,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(4,220,252,0.15)}
+  .nav-logo{font-size:1.8rem;font-weight:700;letter-spacing:-1px;font-family:Georgia,serif}
+  .nav-logo .c1{color:#FF00FF}
+  .nav-logo .c2{color:#04DCFC}
+  .nav-links{display:flex;gap:2.5rem;align-items:center}
+  .nav-links a{font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:#F5F4EF;opacity:0.7;transition:opacity 0.2s,color 0.2s}
+  .nav-links a:hover{opacity:1;color:#04DCFC}
+  .nav-speak{background:transparent;color:#04DCFC;padding:0.5rem 1.2rem;border-radius:2px;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;border:1.5px solid #04DCFC;transition:all 0.2s;cursor:pointer}
+  .nav-speak:hover{background:#04DCFC;color:#081249}
+  #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#081249;padding:10rem 4rem 4rem}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1200px;width:100%}
+  .hero-eyebrow{font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:#04DCFC;margin-bottom:1.5rem}
+  .hero-name{font-size:6rem;font-weight:900;line-height:0.9;letter-spacing:-4px;color:#F5F4EF;margin-bottom:1rem}
+  .hero-name span{color:#FF00FF}
+  .hero-titles{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:2rem}
+  .hero-title-item{font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:#04DCFC;opacity:0.85}
+  .hero-title-item::before{content:"◆ ";opacity:0.5}
+  .hero-statement{font-size:1.15rem;line-height:1.7;color:#F5F4EF;opacity:0.8;margin-bottom:2.5rem;max-width:480px}
+  .hero-statement em{color:#04DCFC;font-style:normal}
+  .btn-primary{background:#FF00FF;color:#fff;padding:0.8rem 2rem;border-radius:2px;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;cursor:pointer;border:none;transition:background 0.2s}
+  .btn-primary:hover{background:#FA34B9}
+  .hero-photo-wrap{position:relative;display:flex;justify-content:center}
+  .hero-photo-frame{position:relative;width:440px;height:560px}
+  .hero-photo-bg{position:absolute;inset:0;background:linear-gradient(135deg,#4F0178,#081249);border-radius:4px;transform:rotate(3deg)}
+  .hero-photo-accent{position:absolute;bottom:-12px;right:-12px;width:100%;height:100%;border:2px solid #04DCFC;border-radius:4px;opacity:0.3}
+  .hero-photo{position:relative;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:4px}
+  .hero-stat-strip{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:rgba(8,18,73,0.9);border-top:1px solid rgba(4,220,252,0.2);padding:1.2rem}
+  .hero-stat{text-align:center}
+  .hero-stat-num{font-size:1.6rem;font-weight:800;color:#04DCFC}
+  .hero-stat-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:#F5F4EF;opacity:0.5;margin-top:2px}
+  #beliefs{background:#1a0033;padding:7rem 4rem;position:relative;overflow:hidden}
+  #beliefs::after{content:"";position:absolute;top:50%;right:-150px;transform:translateY(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(79,1,120,0.5),transparent 70%);pointer-events:none}
+  .beliefs-inner{max-width:1200px;margin:0 auto}
+  .beliefs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .flip-wrap{height:220px;perspective:1000px;cursor:pointer}
+  .flip-inner{position:relative;width:100%;height:100%;transition:transform 0.55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+  .flip-wrap:hover .flip-inner{transform:rotateY(180deg)}
+  .flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:2px;padding:1.8rem}
+  .flip-front{background:rgba(79,1,120,0.25);border:1px solid rgba(255,0,255,0.2);display:flex;flex-direction:column;justify-content:flex-end}
+  .flip-back{background:rgba(79,1,120,0.55);border:1px solid #FF00FF;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center}
+  .belief-num{font-size:3rem;font-weight:900;color:#FF00FF;opacity:0.18;line-height:1;margin-bottom:0.4rem}
+  .belief-title{font-size:0.95rem;font-weight:700;color:#F5F4EF;line-height:1.3}
+  .belief-body{font-size:0.82rem;color:#F5F4EF;opacity:0.78;line-height:1.7}
+  .flip-hint{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#FF00FF;opacity:0.5;margin-top:0.6rem}
+  #about{background:#350012;padding:7rem 4rem;position:relative;overflow:hidden}
+  #about::before{content:"";position:absolute;top:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(82,0,26,0.6),transparent 70%);pointer-events:none}
+  .about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.5fr;gap:5rem;align-items:start}
+  .section-label{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:#FA8203;margin-bottom:1rem}
+  .section-heading{font-size:2.8rem;font-weight:800;line-height:1.1;color:#F5F4EF;margin-bottom:1.5rem}
+  .about-body p{font-size:1.05rem;line-height:1.8;color:#F5F4EF;opacity:0.82;margin-bottom:1.3rem}
+  .about-pull{border-left:3px solid #FA8203;padding:0.8rem 1.2rem;margin:1.5rem 0;font-size:1rem;font-style:italic;color:#FA8203;line-height:1.6;opacity:0.9}
+  .currently-badge{position:absolute;top:1.2rem;right:-1rem;background:#52001A;border:1px solid rgba(250,130,3,0.4);border-radius:6px;padding:0.8rem 1rem;max-width:170px}
+  .currently-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#FA8203;margin-bottom:0.3rem}
+  .currently-text{font-size:0.95rem;font-weight:800;color:#F5F4EF;line-height:1.3}
+  #speaking{background:#0d1a0d;padding:7rem 4rem}
+  .speaking-inner{max-width:1200px;margin:0 auto}
+  .speaking-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3rem;align-items:start}
+  .speaking-topics{display:flex;flex-direction:column;gap:1rem}
+  .topic-item{border-left:2px solid #A4FF04;padding:0.8rem 1.2rem;background:rgba(164,255,4,0.04)}
+  .topic-title{font-size:0.85rem;font-weight:700;color:#F5F4EF;margin-bottom:0.3rem}
+  .topic-desc{font-size:0.78rem;color:#F5F4EF;opacity:0.55;line-height:1.5}
+  .speaking-cta-box{background:#111;border:1px solid rgba(164,255,4,0.2);border-radius:2px;padding:2.5rem;position:sticky;top:6rem}
+  .speaking-cta-eyebrow{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#A4FF04;margin-bottom:1rem}
+  .speaking-cta-heading{font-size:1.4rem;font-weight:800;color:#F5F4EF;margin-bottom:1.5rem;line-height:1.3}
+  .speaking-cta-note{font-size:0.75rem;color:#F5F4EF;opacity:0.35;line-height:1.6;margin-top:1rem;font-style:italic}
+  .section-label-lime{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:#A4FF04;margin-bottom:1rem}
+  .btn-lime{background:#A4FF04;color:#081249;padding:0.9rem 2rem;border-radius:2px;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;cursor:pointer;border:none;transition:background 0.2s,color 0.2s;width:100%}
+  .btn-lime:hover{background:#04DCFC;color:#081249}
+  /* INQUIRY FORM — hidden by default, expands below button */
+  .inquiry-form-wrap{display:none;margin-top:1.5rem;background:#0a1a0a;border:1px solid rgba(164,255,4,0.25);border-radius:2px;padding:1.8rem}
+  .inquiry-form-wrap.open{display:block}
+  .form-group{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+  .form-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:#A4FF04;opacity:0.8}
+  .form-input,.form-select,.form-textarea{background:rgba(255,255,255,0.05);border:1px solid rgba(164,255,4,0.2);border-radius:2px;padding:0.7rem 0.9rem;font-size:0.88rem;color:#F5F4EF;font-family:'Helvetica Neue',Arial,sans-serif;width:100%;transition:border-color 0.2s}
+  .form-input::placeholder,.form-textarea::placeholder{color:#F5F4EF;opacity:0.3}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:#A4FF04}
+  .form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A4FF04' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.9rem center;padding-right:2.5rem;cursor:pointer}
+  .form-select option{background:#0a1a0a;color:#F5F4EF}
+  .form-textarea{resize:vertical;min-height:120px;line-height:1.6}
+  .form-note{font-size:0.7rem;color:#F5F4EF;opacity:0.3;line-height:1.6;font-style:italic;margin-top:0.8rem}
+  .form-success-msg{display:none;text-align:center;padding:1.5rem 0}
+  .form-success-msg.show{display:block}
+  .form-success-msg p{color:#A4FF04;font-size:0.95rem;font-weight:700;margin-bottom:0.4rem}
+  .form-success-msg span{color:#F5F4EF;opacity:0.5;font-size:0.82rem}
+  #findme{background:#081249;padding:7rem 4rem;position:relative;overflow:hidden}
+  #findme::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(4,220,252,0.06),transparent 70%);pointer-events:none}
+  .findme-inner{max-width:1200px;margin:0 auto}
+  .findme-heading{font-size:2.8rem;font-weight:900;color:#F5F4EF;margin-bottom:0.6rem}
+  .findme-heading span{color:#04DCFC}
+  .findme-sub{font-size:1rem;color:#F5F4EF;opacity:0.55;margin-bottom:3rem;line-height:1.6;max-width:600px}
+  .findme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+  .findme-card{background:rgba(255,255,255,0.04);border:1px solid rgba(4,220,252,0.12);border-radius:6px;padding:1.8rem 1.5rem;transition:border-color 0.2s,background 0.2s;cursor:pointer;display:block}
+  .findme-card:hover{border-color:rgba(4,220,252,0.4);background:rgba(4,220,252,0.06)}
+  .findme-icon-wrap{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+  .findme-icon-wrap svg{width:22px;height:22px;fill:#F5F4EF}
+  .findme-platform{font-size:1rem;font-weight:700;color:#F5F4EF;margin-bottom:0.4rem}
+  .findme-desc{font-size:0.82rem;color:#F5F4EF;opacity:0.5;line-height:1.5}
+  #northhighland{background:#0a0a14;padding:5rem 4rem;border-top:1px solid rgba(4,220,252,0.08)}
+  .nh-inner{max-width:1200px;margin:0 auto}
+  .nh-top{display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:center;margin-bottom:3rem}
+  .nh-label{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:#04DCFC;margin-bottom:0.8rem}
+  .nh-heading{font-size:1.6rem;font-weight:800;color:#F5F4EF;line-height:1.2}
+  .nh-heading span{color:#04DCFC}
+  .nh-body{font-size:0.95rem;line-height:1.8;color:#F5F4EF;opacity:0.7}
+  .nh-link{display:inline-flex;align-items:center;gap:0.4rem;margin-top:1.2rem;font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;color:#04DCFC;font-weight:600;border-bottom:1px solid rgba(4,220,252,0.3);padding-bottom:2px;transition:border-color 0.2s}
+  .nh-link:hover{border-color:#04DCFC}
+  .nh-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  .nh-tile{background:rgba(4,220,252,0.04);border:1px solid rgba(4,220,252,0.12);border-radius:4px;padding:1.2rem;transition:border-color 0.2s,background 0.2s;display:block}
+  .nh-tile:hover{border-color:rgba(4,220,252,0.35);background:rgba(4,220,252,0.08)}
+  .nh-tile-tag{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:#04DCFC;margin-bottom:0.5rem;opacity:0.7}
+  .nh-tile-title{font-size:0.88rem;font-weight:700;color:#F5F4EF;line-height:1.4;margin-bottom:0.4rem}
+  .nh-tile-desc{font-size:0.75rem;color:#F5F4EF;opacity:0.45;line-height:1.5}
+  #giveback{background:#04150f;padding:5rem 4rem;border-top:1px solid rgba(164,255,4,0.08)}
+  .giveback-inner{max-width:1200px;margin:0 auto}
+  .giveback-header{display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:center;margin-bottom:2.5rem}
+  .giveback-body{font-size:0.95rem;line-height:1.8;color:#F5F4EF;opacity:0.7}
+  .giveback-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+  .giveback-card{background:rgba(164,255,4,0.04);border:1px solid rgba(164,255,4,0.15);border-radius:4px;padding:1.4rem}
+  .giveback-card-name{font-size:0.85rem;font-weight:700;color:#A4FF04;margin-bottom:0.5rem}
+  .giveback-card-pull{font-size:0.78rem;font-style:italic;color:#A4FF04;opacity:0.7;margin-bottom:0.6rem;line-height:1.4}
+  .giveback-card-body{font-size:0.75rem;color:#F5F4EF;opacity:0.55;line-height:1.6}
+  .giveback-card-link{display:inline-block;margin-top:0.8rem;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:#A4FF04;opacity:0.6;border-bottom:1px solid rgba(164,255,4,0.3)}
+  footer{background:#040a2e;padding:2.5rem 4rem;border-top:1px solid rgba(4,220,252,0.1)}
+  .footer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+  .footer-logo{font-size:1.4rem;font-weight:900;letter-spacing:-1px;font-family:Georgia,serif}
+  .footer-links{display:flex;gap:2rem}
+  .footer-links a{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#F5F4EF;opacity:0.4;transition:opacity 0.2s}
+  .footer-links a:hover{opacity:0.9;color:#04DCFC}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.06)}
+  .footer-social{display:flex;gap:0.8rem}
+  .footer-social-icon{width:30px;height:30px;border:1px solid rgba(4,220,252,0.2);border-radius:2px;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s}
+  .footer-social-icon:hover{border-color:#04DCFC}
+  .footer-social-icon svg{width:13px;height:13px;fill:#04DCFC;opacity:0.6}
+  .footer-copy{font-size:0.68rem;color:#F5F4EF;opacity:0.25;letter-spacing:0.1em}
+  @media(max-width:900px){
+    nav{padding:1rem 1.5rem}
+    .nav-links{display:none}
+    #hero,#about,#beliefs,#speaking,#findme,#northhighland,#giveback{padding:4rem 1.5rem}
+    .hero-grid,.about-inner,.nh-top,.beliefs-grid,.speaking-grid,.giveback-header,.findme-grid,.nh-tiles,.giveback-cards{grid-template-columns:1fr}
+    .hero-name{font-size:3.5rem}
+    .hero-photo-frame{width:100%;height:340px}
+    footer{padding:2rem 1.5rem}
+    .footer-top{flex-direction:column;gap:1.5rem;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div><div class="nav-logo"><span class="c1">C</span><span class="c2">A</span></div></div>
+  <div class="nav-links">
+    <a href="#beliefs">Philosophy</a>
+    <a href="#about">About</a>
+    <a href="#giveback">Giving Back</a>
+    <a href="#findme">Find Me</a>
+    <a href="#speaking" class="nav-speak">Invite Me to Speak</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">The Evolution Has Arrived</div>
+      <div class="hero-name">Work<span>.</span><br>Future<span>.</span><br>Human<span>.</span></div>
+      <div class="hero-titles">
+        <div class="hero-title-item">Workforce Futurist</div>
+        <div class="hero-title-item">Strategic Architect</div>
+        <div class="hero-title-item">Human Technologist</div>
+      </div>
+      <p class="hero-statement">I'm Courtney Albert, also known as CA. I work at the intersection of people, strategy, and technology. Organizations don't evolve — <em>people do</em>. I help leaders, systems, and institutions catch up with the humans already living in the future of work.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <button class="btn-primary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About Me</button>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-frame">
+        <div class="hero-photo-bg"></div>
+        <div class="hero-photo-accent"></div>
+        <img class="hero-photo" src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775159223/illustratedCAheadshot_ejalfw.png" alt="CA — Workforce Futurist"/>
+        <div class="hero-stat-strip">
+          <div class="hero-stat"><div class="hero-stat-num">20+</div><div class="hero-stat-label">Years</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">∞</div><div class="hero-stat-label">Curiosity</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">1</div><div class="hero-stat-label">Mission</div></div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BELIEFS -->
+<section id="beliefs">
+  <div class="beliefs-inner">
+    <div class="section-label" style="color:#FF00FF">Core Philosophy</div>
+    <div class="section-heading" style="color:#F5F4EF">What I know<br>to be <span style="color:#FF00FF">true.</span></div>
+    <p style="font-size:0.85rem;color:#F5F4EF;opacity:0.45;margin-top:0.5rem;letter-spacing:0.05em">Hover each card to go deeper.</p>
+    <div class="beliefs-grid">
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">01</div><div class="belief-title">AI should liberate, not replace</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">Technology and systems thinking exist to expand human capacity, not substitute for it. When designed with intention, AI becomes an amplifier of human potential. And when the algorithm encounters something it cannot optimize: an underperforming employee, a fractured team, a leader who needs to be told the hard truth. That is not a gap in the system. That is the whole point of the human.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">02</div><div class="belief-title">People are the only variable that matters</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">Organizations don't evolve on their own. Strategies don't execute themselves. Culture doesn't shift by mandate. Every transformation begins and ends with people, and the ones who understand <em style="color:#FF00FF">that</em> aren't just better leaders. They're the ones still standing when everyone else is wondering what went wrong.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">03</div><div class="belief-title">Cross-sector thinking is a superpower</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">The most dangerous assumption in any industry is that solutions only come from within. The breakthroughs live at the edges... in the overlap between worlds that weren't supposed to meet. Every time I've brought a framework from one sector into another, something unlocked. That's not accident. That's methodology.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">04</div><div class="belief-title">Workforce and org futures must be designed, not defaulted</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">The future of work will not arrive as a surprise to those who built it intentionally. Proactive design (not reactive scrambling) is the only responsible posture for leaders in this moment. Defaulting is also a choice. It just means someone else is making the decisions for you.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">05</div><div class="belief-title">Scholarship and street knowledge are not opposites</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">Rigorous frameworks without lived context are just theory. Lived experience without structural analysis is just anecdote. The work that moves people lives in the integration of both. I pursue my doctorate for the same reason I stay close to the frontline — because neither alone is ever enough.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">06</div><div class="belief-title">Bold is not a style — it's a commitment</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">Real transformation requires saying the uncomfortable thing in the room. Not because it's provocative, but because it's necessary. Sometimes that truth arrives with humor, driven by data, always with compassion. Never with hesitation. The willingness to be direct while remaining deeply human is not a contradiction. It's the whole point.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">07</div><div class="belief-title">The most dangerous leader is one who has stopped being curious</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">Expertise is valuable. Certainty is a trap. Not asking is failure. The leaders who will navigate this next era well are the ones who remain genuinely, uncomfortably, productively curious about what they don't know, who they haven't heard from, and what they might be wrong about. The question that makes the room uncomfortable is usually the one most worth asking.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">08</div><div class="belief-title">The future of work is a question of dignity</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">How we design work, including who gets visibility, who gets recognized, who gets to grow, is not a talent strategy. It is a moral one. Diversity of thought is not a sentiment; it's a structural advantage. The room that disagrees productively outperforms the room that nods along, every time. The organizations that understand this will build something worth working for. The ones that don't will wonder why no one wants to stay.</div></div>
+      </div></div>
+      <div class="flip-wrap"><div class="flip-inner">
+        <div class="flip-front"><div class="belief-num">09</div><div class="belief-title">The half-life of expertise is shrinking...and that's good news</div><div class="flip-hint">hover to read more</div></div>
+        <div class="flip-back"><div class="belief-body">The world is not punishing expertise. It is punishing the refusal to keep learning. The professionals who will matter most in the next decade are not the ones who know the most today — they are the ones who are anticipating tomorrow. Reinvention and evolution are not a crisis. It is, if you let it be, the whole adventure.</div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div>
+      <div class="section-label">About Me</div>
+      <div class="section-heading" style="color:#F5F4EF">Not one<br>lane.<br><span style="color:#FA8203">All of them.</span></div>
+      <div style="width:60px;height:2px;background:#FA8203;margin:0 0 1.5rem"></div>
+      <div style="position:relative;margin-top:2rem">
+        <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775178294/1835C33F-4AB4-40EE-B417-9068C13F2687_wfc8lu.png" alt="Courtney Albert" style="width:260px;height:260px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid rgba(250,130,3,0.4);display:block;margin:0 auto"/>
+        <div class="currently-badge">
+          <div class="currently-label">Currently</div>
+          <div class="currently-text">Studying the future.<br>It's a lot.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="about-body">
+        <p>I grew up in a place where forgetting your wallet at the coffee shop could end with you paying in poetry. True story. The kind of town where a philosophy major, a lawyer, and a working musician end up in a band together, and nobody thinks that's strange, even though that sounds like a setup for a joke. I absorbed early that <em style="color:#FA8203;font-style:italic">people are more interesting than their categories or boxes.</em> That the same environment produces wildly different humans. And that if you actually slow down and ask (really ask), people will tell you something that surprises you every time.</p>
+        <p>I never fit neatly into any one box. As it turns out, that was the whole preparation.</p>
+        <p>Across Fortune 100 companies and nearly every industry you can name (Retail &amp; CPG was the first love, but curiosity, as it turns out, has no loyalty. So I explored), I built expertise at the intersection of workforce strategy, organizational design, and change management. The operating models that determine how work actually gets done. The skills architectures that either position people for what's coming or quietly leave them behind. The ways of working that either liberate or constrain. And increasingly, the role of AI in reshaping all of it. <em style="color:#FA8203;font-style:italic">The variation is the data.</em> The human architecture is always the most interesting, and most underestimated, variable in the room. I was asking the human question and drawing the diagrams. The dots were always there. <em style="color:#FA8203;font-style:italic">I just never stopped looking for the lines between them.</em></p>
+        <p>I've spent my career helping organizations navigate the hardest question in business: how do you build systems that actually work for people? Not around them. Not despite them. <em style="color:#FA8203;font-style:italic">For</em> them.</p>
+        <p>As AI reshapes every layer of organizational life, that question has never been more urgent or more fascinating. I think about this daily, research it rigorously, and occasionally lose sleep over it in the most productive way possible.</p>
+        <div class="about-pull">"I'm currently pursuing my doctorate, which mostly means I have strong opinions and a lot of citations."</div>
+        <p>This space is where I think out loud, connect with fellow travelers, and champion the causes and ideas I believe in most. <em style="color:#FA8203;font-style:italic">Pull up a chair.</em> The ideas are good here.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#280010;padding:3rem 4rem">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none" onclick="toggleCurious()">
+        <div style="font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:#FA8203;opacity:0.8">For the curious</div>
+        <div id="curiousChevron" style="font-size:0.75rem;color:#FA8203;opacity:0.6;transition:transform 0.3s">▼</div>
+      </div>
+      <div id="curiousContent" style="display:none;margin-top:1.2rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem">
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345129/icon_bridge_ca_inzqrb.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On punctuation</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">I was an unapologetic fan of the em-dash — and the ampersand, but that's a different story — long before either became a red flag for AI-generated content. To me, the em-dash is a structural bridge for thoughts too expansive for a comma but too interconnected for a period. I have since expanded my repertoire. The parenthesis has earned a permanent seat at the table (for the thought that needs to exist but doesn't quite belong in the main argument). And the ellipsis... well. The pauses matter.</div>
+        </div>
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345129/icon_scale_ca_eiq9kp.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On AI ethics</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">I've spent so much time analyzing AI ethics that I now find myself being unnecessarily polite to chatbots — just in case the "alignment problem" goes sideways. I apologize when I rephrase.* I occasionally wonder if I'm being judged. My AI assistant assures me it's not. I remain unconvinced.</div>
+          <div style="font-size:0.72rem;font-style:italic;color:#F5F4EF;opacity:0.45;line-height:1.6;margin-top:0.7rem">*For the record: getting full value from AI requires being incredibly direct and specific. The politeness is a personal insurance policy, not a workflow recommendation.</div>
+        </div>
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345129/icon_magpie_ca_mgrzxi.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On reading</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">I am an avid reader, though most of my books* have a bookmark hovering somewhere in the middle and have been technically "abandoned." Not because they weren't good. Because I got what I needed and moved on. Some people finish books. I mine them for what matters... and then move on, like a very intentional magpie.<br><br>Most of my copies are annotated — margins full, occasionally a sticky note that made complete sense in the moment. I skew heavily non-fiction: biographies, history, and the genre that resists easy labeling — the kind that takes a deceptively simple question or overlooked situation and follows it until it becomes an approach about everything. The Gladwell shelf, if you will.</div>
+          <div style="font-size:0.72rem;font-style:italic;color:#F5F4EF;opacity:0.45;line-height:1.6;margin-top:0.7rem">*I don't gatekeep. You'll find some recommendations <a href="#findme" style="color:#FA34B9;opacity:0.8">here</a>.</div>
+        </div>
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345128/icon_chess_ca_zsoanc.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On the uniform</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">I've spent years walking into organizations and one of the first things I notice are the aesthetics, from the architecture, furniture, artwork, and how people show up — all of which provide signals of the overall culture. What people wear signals power, hierarchy, and who actually has permission to be themselves. I find that fascinating. I also find a well-considered outfit deeply satisfying. The hunt, the detail, the thing that makes you smile when you put it on.<br><br>For me, sneakers were not part of the plan. Especially with visions of 80s suits and sterling white sneakers signaling the commuter, which frankly was ugly. What started as a quest for both comfort &amp; style quietly became a collection of colors and brands, and somewhere along the way, a conversation starter. They've introduced me to people I never would have met otherwise and opened doors I didn't know I was knocking on. There is something quietly powerful about showing up slightly unexpected and even pushing beyond one's previous bias. The corporate uniform has evolved — and honestly, so has the definition of professional dress.</div>
+        </div>
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345129/icon_fline_ca_faayh2.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On theory in the wild</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">It's also, not coincidentally, why I ended up at NYU... to put words to the experiences I'd been living in organizations for years. The real through-line has always been the intersection of real-world chaos and theory — what actually happens to people when organizations change around them? I bring that answer to clients. And sometimes, I write a paper about it.</div>
+        </div>
+        <div style="border-left:2px solid rgba(250,130,3,0.4);padding:0.9rem 1.2rem;background:rgba(250,130,3,0.05);border-radius:0 2px 2px 0">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+            <img src="https://res.cloudinary.com/doji0ocnl/image/upload/q_auto/f_auto/v1775345128/icon_tunefork_ca_muylju.png" width="20" height="20" style="object-fit:contain"/>
+            <div style="font-size:0.82rem;font-weight:700;color:#FA8203">On seeing early</div>
+          </div>
+          <div style="font-size:0.82rem;color:#F5F4EF;opacity:0.72;line-height:1.65">I tend to spot patterns before they're legible to the room, which is thrilling right up until the moment everyone else catches on and the thing becomes a slide in a trend deck. I have a low tolerance for stale, forced, or already-overused. Unless, of course, it's a classic. The difference between timeless and tired is a matter of intention, and I reserve the right to decide which is which.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEAKING -->
+<section id="speaking">
+  <div class="speaking-inner">
+    <div class="section-label-lime">Speaking & Collaboration</div>
+    <div style="font-size:2.8rem;font-weight:800;color:#F5F4EF;margin-bottom:0.5rem">Got a stage?<br><span style="color:#A4FF04">Let's talk.</span></div>
+    <p style="font-size:1rem;color:#F5F4EF;opacity:0.6;max-width:660px;line-height:1.7;margin-bottom:2.5rem">Let's put something worth talking about on your agenda. Keynotes, panels, roundtables, executive conversations. Bring the questions... I'll bring the thinking and a solid opening line.</p>
+    <div class="speaking-grid">
+      <div class="speaking-topics">
+        <div style="font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:#A4FF04;margin-bottom:1rem;opacity:0.7">Topics I speak on</div>
+        <div class="topic-item">
+          <div class="topic-title">AI Won't Take Your Job. But It Will Expose Whether You Were Doing It.</div>
+          <div class="topic-desc">A candid conversation about what AI reveals about organizational design, leadership, and human value.</div>
+        </div>
+        <div class="topic-item">
+          <div class="topic-title">The Future of Work Is Already Here... You're Just Not Looking in the Right Place</div>
+          <div class="topic-desc">The signals are already there. They're just not where you're looking.</div>
+        </div>
+        <div class="topic-item">
+          <div class="topic-title">Workforce Transformation Starts With a Mirror, Not a Roadmap</div>
+          <div class="topic-desc">Before the strategy comes the reckoning. Sometimes that means facing where you are. Sometimes it means deciding where you are no longer matters.</div>
+        </div>
+        <div class="topic-item">
+          <div class="topic-title">AI Is a People Problem. Solve It That Way.</div>
+          <div class="topic-desc">How leaders are succeeding at AI adoption. Hint: technology came second.</div>
+        </div>
+        <div class="topic-item">
+          <div class="topic-title">Nobody Designed This. That's the Problem.</div>
+          <div class="topic-desc">Organizations invest in strategy. Almost nothing goes into the job architecture that determines how it is executed.</div>
+        </div>
+        <div class="topic-item">
+          <div class="topic-title">Diagnose. Design. Move. The Work Most Organizations Skip.</div>
+          <div class="topic-desc">Org design and operating model are the decisions that determine everything else. Most organizations skip them.</div>
+        </div>
+      </div>
+      <div class="speaking-cta-box">
+        <div class="speaking-cta-eyebrow">Invite Me to Speak</div>
+        <div class="speaking-cta-heading">Let's put something worth talking about on your agenda.</div>
+        <button class="btn-lime" id="openFormBtn" onclick="toggleForm()">Contact to Speak &amp; Collaborate</button>
+        <div class="inquiry-form-wrap" id="inquiryForm">
+          <div id="formFields">
+            <form action="https://formspree.io/f/mjgjwjye" method="POST" onsubmit="handleSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="f-name">Name</label>
+                <input class="form-input" type="text" id="f-name" name="name" placeholder="Your name" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="f-email">Email</label>
+                <input class="form-input" type="email" id="f-email" name="email" placeholder="Your email address" required/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="f-topic">Topic of Interest</label>
+                <select class="form-select" id="f-topic" name="topic" required>
+                  <option value="" disabled selected>Select a topic...</option>
+                  <option>AI Won't Take Your Job. But It Will Expose Whether You Were Doing It.</option>
+                  <option>The Future of Work Is Already Here... You're Just Not Looking in the Right Place</option>
+                  <option>Workforce Transformation Starts With a Mirror, Not a Roadmap</option>
+                  <option>AI Is a People Problem. Solve It That Way.</option>
+                  <option>Nobody Designed This. That's the Problem.</option>
+                  <option>Diagnose. Design. Move. The Work Most Organizations Skip.</option>
+                  <option>Open to Discussion</option>
+                  <option>Other Inquiry</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="f-message">Message</label>
+                <textarea class="form-textarea" id="f-message" name="message" placeholder="Tell me about your event, your audience, and what you're hoping the conversation will accomplish..."></textarea>
+              </div>
+              <button type="submit" class="btn-lime">Send Inquiry</button>
+              <p class="form-note">I take a limited number of engagements each year and prioritize events where the conversation can go somewhere real. I'll be in touch within a few days.</p>
+            </form>
+          </div>
+          <div class="form-success-msg" id="formSuccess">
+            <p>Your inquiry is on its way.</p>
+            <span>I'll be in touch within a few days. In the meantime, feel free to connect on LinkedIn.</span>
+          </div>
+        </div>
+        <div class="speaking-cta-note">I take a limited number of engagements each year and prioritize events where the conversation can go somewhere real.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIND ME -->
+<section id="findme">
+  <div class="findme-inner">
+    <div class="section-label" style="color:#04DCFC">Find Me Online</div>
+    <div class="findme-heading">Find me where <span>ideas live.</span></div>
+    <p class="findme-sub">No performance. No algorithm-chasing. Just ideas worth your time... and maybe a book recommendation or two.</p>
+    <div class="findme-grid">
+      <a href="https://www.linkedin.com/in/courtneyalbert/" target="_blank" class="findme-card">
+        <div class="findme-icon-wrap" style="background:#1a3a6b"><svg viewBox="0 0 24 24" style="fill:#7ab3e0"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+        <div class="findme-platform">LinkedIn</div>
+        <div class="findme-desc">I connect with intention. Tell me about you.</div>
+      </a>
+      <a href="https://substack.com/@caevolves" target="_blank" class="findme-card">
+        <div class="findme-icon-wrap" style="background:#1a3a6b"><svg viewBox="0 0 24 24" style="fill:#7ab3e0"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></div>
+        <div class="findme-platform">Substack</div>
+        <div class="findme-desc">Thoughts in progress. Subscribe early.</div>
+      </a>
+      <a href="https://bookshop.org/shop/CA" target="_blank" class="findme-card">
+        <div class="findme-icon-wrap" style="background:#1a3a6b"><svg viewBox="0 0 24 24" style="fill:#7ab3e0"><path d="M19 2H6a2 2 0 00-2 2v16a2 2 0 002 2h13a1 1 0 001-1V3a1 1 0 00-1-1zm-7 3h5v2h-5V5zm0 4h5v2h-5V9zm7 10H6a1 1 0 010-2h13v2zm0-4H6V4h1v9l2.5-1.5L12 13l2.5-1.5L17 13V4h2v11z"/></svg></div>
+        <div class="findme-platform">Bookshop.org</div>
+        <div class="findme-desc">Books I'll actually finish. Mostly.</div>
+      </a>
+      <a href="https://beacons.ai/courtneyalbert" target="_blank" class="findme-card">
+        <div class="findme-icon-wrap" style="background:#1a3a6b"><svg viewBox="0 0 24 24" style="fill:#7ab3e0"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>
+        <div class="findme-platform">All Links</div>
+        <div class="findme-desc">One place. Everything CA.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- NORTH HIGHLAND -->
+<section id="northhighland">
+  <div class="nh-inner">
+    <div class="nh-top">
+      <div>
+        <div class="nh-label">Where I Practice What I Preach</div>
+        <div class="nh-heading">North<br><span>Highland</span></div>
+      </div>
+      <div>
+        <p class="nh-body">The ideas you'll find here aren't theoretical. They're tested in real organizations, with real stakes, alongside real people navigating change that doesn't wait for anyone to be ready. My day-to-day work at North Highland is where the frameworks meet the friction. It's where workforce transformation stops being a keynote topic and starts being a Tuesday.</p>
+        <a class="nh-link" href="https://northhighland.com/courtney-albert" target="_blank">Visit my North Highland profile →</a>
+      </div>
+    </div>
+    <div class="nh-tiles">
+      <a href="https://northhighland.com/insights/collections/functions-of-the-future" target="_blank" class="nh-tile">
+        <div class="nh-tile-tag">Insight Collection</div>
+        <div class="nh-tile-title">Functions of the Future</div>
+        <div class="nh-tile-desc">How the roles, structures, and skills of tomorrow are taking shape today.</div>
+      </a>
+      <a href="https://northhighland.com/insights/videos/lead-with-intelligence-ai-webinar-series" target="_blank" class="nh-tile">
+        <div class="nh-tile-tag">Video Series</div>
+        <div class="nh-tile-title">Lead with Intelligence: An AI Upskilling Series for Executives</div>
+        <div class="nh-tile-desc">What it means to lead, not just manage, in an AI-enabled organization.</div>
+      </a>
+      <a href="https://northhighland.com/insights/blogs/balancing-speed-with-impact-part-1-finding-the-right-pace-for-ai-adoption" target="_blank" class="nh-tile">
+        <div class="nh-tile-tag">Blog</div>
+        <div class="nh-tile-title">Balancing Speed with Impact: Finding the Right Pace for AI Adoption</div>
+        <div class="nh-tile-desc">Moving fast on AI is tempting. Moving smart is the actual work.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GIVE BACK -->
+<section id="giveback">
+  <div class="giveback-inner">
+    <div class="giveback-header">
+      <div>
+        <div class="section-label-lime">Beyond the Work</div>
+        <div style="font-size:1.8rem;font-weight:800;color:#F5F4EF;line-height:1.2">Giving back<br>is <span style="color:#A4FF04">non-negotiable</span>.</div>
+      </div>
+      <p class="giveback-body">The future of work means nothing if it only works for some people. Outside of my professional life, I invest time and energy in causes that expand access, opportunity, and equity — because building the future is not a spectator sport.</p>
+    </div>
+    <div class="giveback-cards">
+      <div class="giveback-card">
+        <div class="giveback-card-name">Nuci's Space</div>
+        <div class="giveback-card-pull">"There is a fine line between creativity and crisis."</div>
+        <div class="giveback-card-body">A nonprofit providing mental health resources to musicians and creative people. For me, it's personal. I believe we cannot talk about the future of work without talking about the mental health of the people doing that work.</div>
+        <a href="https://nuci.org" target="_blank" class="giveback-card-link">nuci.org →</a>
+      </div>
+      <div class="giveback-card">
+        <div class="giveback-card-name">Junior League of Atlanta</div>
+        <div class="giveback-card-pull">"Trained volunteers. Real impact."</div>
+        <div class="giveback-card-body">An organization of women committed to promoting voluntarism and developing the potential of women, and to improving communities through the effective action of trained volunteers.</div>
+        <a href="https://www.jlatlanta.org" target="_blank" class="giveback-card-link">jlatlanta.org →</a>
+      </div>
+      <div class="giveback-card">
+        <div class="giveback-card-name">PBS</div>
+        <div class="giveback-card-pull">"Public media. Public good."</div>
+        <div class="giveback-card-body">Good storytelling, rigorous journalism, and education for everyone. That's worth investing in.</div>
+        <a href="https://www.pbs.org" target="_blank" class="giveback-card-link">pbs.org →</a>
+      </div>
+      <div class="giveback-card">
+        <div class="giveback-card-name">Human Rights Campaign</div>
+        <div class="giveback-card-pull">"Equality is not a partisan issue."</div>
+        <div class="giveback-card-body">The largest national LGBTQ+ civil rights organization, working to end discrimination and advance equality in workplaces, families, and communities. The future of work must include everyone.</div>
+        <a href="https://www.hrc.org" target="_blank" class="giveback-card-link">hrc.org →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo"><span style="color:#FF00FF">C</span><span style="color:#04DCFC">A</span></div>
+      <div style="font-size:0.65rem;color:#F5F4EF;opacity:0.3;letter-spacing:0.15em;text-transform:uppercase;margin-top:3px">Workforce Futurist · Strategic Architect · Human Technologist</div>
+    </div>
+    <div class="footer-links">
+      <a href="#beliefs">Philosophy</a>
+      <a href="#about">About</a>
+      <a href="#speaking">Speaking</a>
+      <a href="#giveback">Giving Back</a>
+      <a href="#findme">Find Me</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/in/courtneyalbert/" target="_blank" class="footer-social-icon" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a href="https://substack.com/@caevolves" target="_blank" class="footer-social-icon" title="Substack"><svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg></a>
+      <a href="https://bookshop.org/shop/CA" target="_blank" class="footer-social-icon" title="Bookshop.org"><svg viewBox="0 0 24 24"><path d="M19 2H6a2 2 0 00-2 2v16a2 2 0 002 2h13a1 1 0 001-1V3a1 1 0 00-1-1zm-7 3h5v2h-5V5zm0 4h5v2h-5V9zm7 10H6a1 1 0 010-2h13v2zm0-4H6V4h1v9l2.5-1.5L12 13l2.5-1.5L17 13V4h2v11z"/></svg></a>
+    </div>
+    <div class="footer-copy">Courtney Albert © 2026 &nbsp;·&nbsp; Built with intention. Designed for impact.</div>
+  </div>
+  <div style="max-width:1200px;margin:1.5rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.04)">
+    <p style="font-size:0.68rem;font-style:italic;color:#F5F4EF;opacity:0.25;line-height:1.7">A note on process: this site was co-created with AI assistance. Given that I spend my professional life thinking about how humans and AI work together responsibly, it felt important to say so. The content reflects my expertise, my voice, and my values. The collaboration reflects my practice.</p>
+  </div>
+</footer>
+
+<script>
+  function toggleCurious(){
+    var c=document.getElementById('curiousContent');
+    var ch=document.getElementById('curiousChevron');
+    if(c.style.display==='none'){
+      c.style.display='block';
+      ch.style.transform='rotate(180deg)';
+    } else {
+      c.style.display='none';
+      ch.style.transform='rotate(0deg)';
+    }
+  }
+  function toggleForm(){
+    var f=document.getElementById('inquiryForm');
+    var btn=document.getElementById('openFormBtn');
+    if(f.classList.contains('open')){
+      f.classList.remove('open');
+      btn.textContent='Book to Speak & Collaborate';
+    } else {
+      f.classList.add('open');
+      btn.textContent='Close Form';
+      setTimeout(function(){f.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+    }
+  }
+  async function handleSubmit(e){
+    e.preventDefault();
+    var form=e.target;
+    var data=new FormData(form);
+    try{
+      var res=await fetch('https://formspree.io/f/mjgjwjye',{method:'POST',body:data,headers:{'Accept':'application/json'}});
+      if(res.ok){
+        document.getElementById('formFields').style.display='none';
+        document.getElementById('formSuccess').classList.add('show');
+      } else {
+        alert('Something went wrong. Please email hello@courtneyalbert.com directly.');
+      }
+    } catch(err){
+      alert('Something went wrong. Please email hello@courtneyalbert.com directly.');
+    }
+  }
+</script>
+</body>
+</html>
